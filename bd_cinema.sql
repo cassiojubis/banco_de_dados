@@ -46,6 +46,14 @@ primary key  pk_endereco(ende_id),
 foreign key fk_endereco_cinema(cine_id) references cinema(cine_id)
 );
 
+CREATE TABLE telefone(
+tele_id INT(5) auto_increment,
+cine_id INT(5)  NOT NULL,
+tele_numero VARCHAR(20) NOT NULL,
+primary key pk_telefone(tele_id),
+foreign key fk_telefone_cinema(cine_id) references cinema(cine_id)
+);
+
 -- alter add nova coluna/campo
 alter table cinema add column cine_email VARCHAR(50) NOT NULL;
 alter table cinema add column cine_telefone VARCHAR(20) NOT NULL;
