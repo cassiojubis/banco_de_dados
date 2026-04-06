@@ -1,93 +1,121 @@
- -- IN / NOT IN
-SELECT 
-elei_nome as "ELEITOR" ,
-elei_titulo as "TITULO DE ELEITOR",
-elei_zona as " ZONA" ,
-elei_sessao as " SESSÂO"
-from eleitor	
-	WHERE  elei_nome IN("Pedro Silva","Tatiana Fidelis");
-    
--- not in
-SELECT 
-elei_nome as "ELEITOR" ,
-elei_titulo as "TITULO DE ELEITOR",
-elei_zona as " ZONA" ,
-elei_sessao as " SESSÂO"
-from eleitor	
-	WHERE  elei_nome  NOT IN("Pedro Silva","Tatiana Fidelis");
-    
--- CONCAT
-SELECT
-concat("Nome: ", elei_nome,"| Titulo :",
-elei_titulo,"| Zona: ", elei_zona) as "DADO O ELEITOR"
-FROM eleitor
-WHERE  elei_nome  NOT IN("Pedro Silva","Tatiana Fidelis")
-order by elei_nome desc;
 
--- CONCAT_WS: DEFINIR UM SEPARADOR PADRAO
-SELECT
-concat_ws(" - ",elei_nome,elei_titulo,elei_zona) as "DADO O ELEITOR"
-FROM eleitor
-WHERE  elei_nome  NOT IN("Pedro Silva","Tatiana Fidelis")
-order by elei_nome desc;
+-- FUNÇÕES DE AGREGRAÇÃO:
+-- SUM(SOMA  DOS NUMEROS )
+-- AVG ( CALCULA A MEDIA DOS VALORES)
+-- MIN ( PEGA O MENOR NUMERO)
+-- MAX ( PEGA O MUMERO MAIOR)
 
--- DISTINCT :
+-- ----------------------- --
+
+-- FUNCÇÕES DE CARACTERES: 
+-- CONCAT -->Juntar nomes e sobrenomes sem separador específico, ou criar códigos únicos.
+-- CONCAT_WS -- > JUNTA NOMES E SOBRENOMES COM SEPARADOR ESPECIFICO
+-- CHAR_LENGTH  --> RETORNA A QTDE DE CARACTERES DE UMA STRING(TAMBEM CONTA OS ESPAÇO)
+-- INSTR --> RETORNA A POSICÇÃO DA PARTE DA STRING PESQUISADA EM RELAÇÃO A SRING PRNCIPAL
+-- LEFT --> RETORNA  OS CARACTERES DA ESQUERDA PARA DIREITA  CONFORME A QTD ESPECIFICADA
+-- RIGTH --> RETORNA OS CARACTERES  DA STRING DA DIREITA PARA ESQUERDA CONFORME A QTD DOS CARACTERES ESPECIFICADA
+-- GROUP BY SERVE PARA AGRUPAR  
+-- HAVING  SERVE PARA  FILTRAR AS AGREGAÇÕES
+-- LPAD --> COMPLETA O TAMANHO  INFORMADO TOTAL DA STRING COM CARACTERES A ESQUERDA
+-- RPAD --> COMPLETA O TAMANHO INFORMADO TOTAL DA STRING COM CARACTERES A DIREITA
+-- LTRIM --> REMOVE OS ESPAÇO EM BRANCO A ESQUERDA
+-- RTRIM --> REMOVE ESPAÇO EM  BRANCO A DIREITA
+-- TRIM --> REMOVE ESPAÇO EM BRANCO  EM AMBOS OS LADOS
+-- SUBSTR --> EXTRAI PARTE DA STRING DE TAMANHO DETERMINADO MEDIANTE A UMA POSIÇÃO INICIAL
+-- 	FORMAT --> FORMATA VALOR MONETARIO PARA O FORMATO BRASILEIRO
+-- REVERSE --> APRESENTA A STRING EM ORDEM REVERSA
+-- REPEAT --> REPETE STRING MEDIANTE  A QUANTIDADE DE VEZES DETERMINADA
+-- REPLACE --> SUBSTITUI AS STRING  DESEJADA 
+-- UPPER -->  CONVERTE DE MINUSCULO PARA MAIUSCULO
+-- LOWER -->  CONVERTE MAIUSCULO PARA MINUSCULO
+
 SELECT 
-distinct part_numero as "Numero do partido"
+	cand_nome as "CANDIDATO",
+    cand_numero as "NUMERO"
 FROM candidato
-order by part_numero;
+where cand_foto is null;
 
--- like : fazer consultas com mais possibilidade   cm texto
+
+-- count
+SELECT 
+	COUNT(*) AS" QDT_FOTO_NULA"
+FROM candidato
+where cand_foto is  NOT null;
 
 SELECT 
-cand_nome as " nome do candidato"
-from candidato
-where cand_nome LIKE "____R%";
-
-SELECT 
-cand_nome as " nome do candidato"
-from candidato
-where cand_nome LIKE "A%";
-
-SELECT 
-cand_nome as " nome do candidato"
-from candidato
-where cand_nome LIKE "%S";
-
-SELECT 
-cand_nome as " nome do candidato"
-from candidato
-where cand_nome LIKE "%NA%";
-
-SELECT
-cand_nome as " nome do candidato"
-from candidato
-where cand_nome	NOT LIKE "%SILVA%";
-
--- limit : limita oque aparece na tela 
--- offSEt : especifica a partir de qual poscição voce quer mostrar
-	select
-    cand_numero as "numero candidato",
-    cand_nome as "nome do candidato"
-    FROM candidato
-    order by  cand_numero desc
-     LIMIT  3 OFFSET 10;
-
- -- calculos sql
- select 
- carg_codigo as "codigo",
- carg_nome as "cargo",
- carg_salario as " salario base",
- (carg_salario + 500.00) as " salario aumento",
- (carg_salario - 500.00) as " salario desconto",
- concat(carg_nome, " salario com aumento: R$", (carg_salario + 500.00))
- from cargo
-order by carg_salario desc;
+	COUNT(*) AS" QDT_FOTO_NULA"
+FROM candidato
+where cand_foto is null;
 
 select 
-carg_nome as" Nome do cargo",
-carg_codigo as "codigo do cargo",
-concat("Cargo :",carg_nome,"salario :",carg_salario,"Aumento de 15%:",(carg_salario*0.15)) as " dados do cargo"
-from cargo
-where carg_nome like "%R";
+COUNT(*)  AS "QTD_CANDIDATOS",
+	sum(cand_numero) as "NUMERO",
+    AVG(cand_numero) as "MÈDIA",
+    min(cand_numero) as "Menor Num",
+    max(cand_numero) as "Maior Num"
+from candidato;
 
+--  HAVING  SERVE PARA  FILTRAR AS AGREGAÇÕES
+SELECT 
+part_numero  as"Partido",
+count(*) as "QTD_CANDIDATOS"
+FROM candidato
+WHERE cand_nome like "%A"
+group  by part_numero
+having COUNT(*) > 2;
+
+select 
+	count(*) AS "QTD_VOTOS",
+    cand_numero  as "numero do candidato"
+from voto
+group  by cand_numero
+having  count(*) = 2;
+
+-- EX CHAR_LENGTH
+
+SELECT CHAR_LENGTH("INSTITUTO FEDERAL") AS "CHAR_LENGTH";
+
+--  EX INSTR 
+SELECT INSTR("INSTITUTO FEDERAL", "FE") AS   "INSTR";
+
+-- EX LEF / RIGHT
+
+SELECT LEFT("INSTITUTO FEDERAL",9) AS   "INSTR";
+
+-- EX LPAD / RPAD
+-- IMPLEMENTAS OS @  NA PARTE ESQUERDA
+SELECT LPAD("IFRO",15,"@") AS "LPAD";
+-- IMPLEMTA os @ na parte direita
+SELECT RPAD("IFRO",10,"@") AS "RPAD"; 
+
+-- EX LTRIM / RTRIM / TRIM
+SELECT LTRIM("   IFRO") AS "LTRIM";
+
+SELECT RTRIM("IFRO  ") AS "RTRIM";
+
+SELECT TRIM("  IFRO  ") AS "TRIM";
+
+-- EX SUBSTR 
+
+SELECT substr("CASSIO SOUZA", 8,3) AS "SUBSTR";
+
+
+--  EX REVERSE 
+
+SELECT REVERSE("YAG O") AS "REVERSE";
+
+-- EX REPEAT 
+SELECT REPEAT("JOJO REFERENCES???? |||", 11) AS "REPEAT";
+
+-- FORMAT
+SELECT format(1234.567, 2, 'de_DE') as "FORMAT";
+
+
+--  EX REPLACE
+ SELECT REPLACE("RAYRE LÚISY" ,"LÚISY", "JUBILEU") AS "REPLACE";
+ 
+ -- EX UPPER / LOWER 
+ 
+ SELECT UPPER("os d ta baforando lança no piru de marginal") as "UPPER";
+ 
+ SELECT LOWER("DOUTOR ME EXPLICA PORQUE É QUE AS VEZES QUANDO EU FICO PARADO  SEM FZR ND O MEU PAU FICA DURO") AS "LOWER";
