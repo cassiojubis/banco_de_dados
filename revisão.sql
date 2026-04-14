@@ -180,9 +180,31 @@ SELECT DAYNAME(CURDATE()) AS "NOME_DIA";
  -- RETORNA O ÚLTIMO DIA DO MÊS 
  SELECT LAST_DAY(CURDATE()) AS "ULTIMO DO MÊS";
  
- 
+ -- 4
  -- DATE_FORMAT
 SELECT CURDATE() AS "DATA ATUAL",
 DATE_FORMAT(CURDATE(), '%d/%m/%y') as "DATA ATUAL FORMATADA",
 	now() as "DATA HORA ATUAL",
     DATE_FORMAT(NOW(), '%d/%m/%y %H:%i:%S')  AS "DATA/HORA ATUAL FORMATADA";-- se deixa  o y minusculo ele abrevia o ano
+--5
+select
+ date_format(voto_data, '%d/%m/%Y') as "data do voto",
+ date_format(date_sub(voto_data, interval 2 year), '%d/%m/%Y') as "data - 2"
+ from voto;
+-- 6
+ select 
+ elei_nome as "NOME DO ELEITOR",
+ date_format(elei_dt_nacimento, '%d/%m/%Y') as "DATA  DE NASCIMENTO",
+ day(elei_dt_nacimento) as "NUMERO DO DIA"
+ from eleitor
+ WHERE elei_zona = 2;
+--7
+select 
+left(elei_nome, 5) as "NOME DO ELEITOR",
+DAYNAME(elei_dt_nacimento) as "NOME DO DIA",
+MONTHNAME(elei_dt_nacimento) as "NOME DO MÊS",
+year(elei_dt_nacimento) as "ANO"
+from eleitor
+ WHERE elei_dt_nacimento >= 2001-01-01
+ order by elei_nome asc;
+
